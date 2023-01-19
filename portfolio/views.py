@@ -10,11 +10,14 @@ from .price_prediction import *
 from .scraper import run_scraper
 from .ai_dataset_prep_df import run_ai
 from .nn_final import run_neural
+from django.views.decorators.csrf import csrf_exempt
+
 
 def home(request):
     return render(request, 'home.html', {})
 
 
+@csrf_exempt 
 def lstm_algorithm(request):
     
     # Get the all files into pickle folder where _history is append at the end to show in the frontend filter for chart

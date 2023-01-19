@@ -24,9 +24,9 @@ TEMPLATE_DIR = Path.joinpath(BASE_DIR, 'templates')
 SECRET_KEY = 'django-insecure-zedp2($!5*3!9wvkkbbr@zpcwuqvg#!o0$7&raxinx2q&yj(zv'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['www.salhail.com']
 
 
 # Application definition
