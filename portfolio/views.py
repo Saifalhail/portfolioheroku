@@ -11,12 +11,12 @@ from .scraper import run_scraper
 from .ai_dataset_prep_df import run_ai
 from .nn_final import run_neural
 from django.views.decorators.csrf import csrf_exempt
-from ratelimit.decorators import ratelimit
+
 
 def home(request):
     return render(request, 'home.html', {})
 
-@ratelimit(key='ip', rate='1/m')
+
 @csrf_exempt 
 def lstm_algorithm(request):
     
