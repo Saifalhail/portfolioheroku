@@ -1,0 +1,215 @@
+{% load static %}
+<div id="ajax-page" class="ajax-page-content">
+    <div class="ajax-page-wrapper">
+        <div class="ajax-page-nav">
+            <div class="nav-item ajax-page-prev-next">
+                <a class="ajax-page-load" href="{% url 'lstm_algorithm' %}"><i class="lnr lnr-chevron-left"></i></a>
+                <a class="ajax-page-load" href="{% url 'lstm_algorithm' %}"><i class="lnr lnr-chevron-right"></i></a>
+            </div>
+            <div class="nav-item ajax-page-close-button">
+                <a id="ajax-page-close-button" href="#"><i class="lnr lnr-cross"></i></a>
+            </div>
+        </div>
+
+        <div class="ajax-page-title">
+            <h1>Neural Network Artificial Intelligence</h1>
+        </div>
+
+        <div class="row">
+
+            <div class="col-sm-8 col-md-8 portfolio-block">
+                <!-- <div class="owl-carousel portfolio-page-carousel"> -->
+                <div class="item">
+                    <p>This program consists of using financial information, that is custom to requirements; it uses 10
+                        years of annual financial data for a specific company and correlates each year with the price of
+                        the stock. There are over 50 annual financial metrics used to correlate to the price during that
+                        year. This data is then stored as pickles and this process repeats for over 1000 companies, once
+                        there is enough data that can correlate financial metrics to price, all this data gets cleaned
+                        and converted to a table (Data Frames). </p>
+                </div>
+                <div class="item">
+                    <p> This data is furthermore checked again to make sure that the information is relatable to price
+                        and any uncorrelated data would be removed. Afterward, all this data is fed into a feed-forward
+                        neural network where the network gets trained and produce a model sufficient to predict results
+                        based on specific financial metrics input. Currently, the CSV being used is a list of financial
+                        metrics for a company, in this case, Apple. This data is then fed into a feed-forward neural
+                        network where the trained model is being used and the weights have already been adjusted to
+                        produce the correct result. </p>
+                </div>
+                <div class="item">
+                    <p>In this project case shown currently, the training would repeat for Apple, where it would quickly
+                        train for 100 Epochs, and the result would be the prediction price and the calculated Loss and
+                        MAE. A decreasing loss means that the network was able to effectively handle training and the
+                        error difference is getting lower, which means that the training within the network is working
+                        as intended. Please allow some time when running the algorithm as it trains from scratch when it
+                        runs. Please Note that the current result will not be very accurate as this is new training done
+                        and the model is not optimized to produce accurate result at 100 epochs only, however this was done
+                        using a powerful model which produced much better results.
+                    </p>
+
+                    <!-- <ul>
+                        {% for i in test3 %}
+                        <li>{{i}}</li>
+                        {% endfor %}
+                    </ul> -->
+
+                    <button type="button" id="runBtn" style="cursor:pointer">RUN</button>
+                    <div class="row">
+                        <div class="col-md-4 offset-md-8" style="padding-bottom: 4px">
+                            <select id="csvFilesFilter" class="form-control">
+                                {% for file in csv_files %}
+                                <option>{{file}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div id="lineChart" class="d-none" style="padding: 10px; border-radius: 8px;">
+                        <div class="preloader-spinner d-none"></div>
+                        <div id="prediction" class="d-none" style="text-align: center;">
+                            <h4
+                                style="text-align:center; color: #FFF; display: inline-block; background-color: #5050f5; padding: 14px 20px; border-radius: 18px; margin-bottom: 12px;">
+                                Prediction Value: <span></span></h4>
+                        </div>
+
+                        <canvas id="myChart" class="d-none"></canvas>
+                    </div>
+
+                </div>
+
+                <script type="text/javascript">
+                    var myChart = false
+                    jQuery(document).ready(function ($) {
+                        $('.portfolio-page-carousel').imagesLoaded(function () {
+                            $('.portfolio-page-carousel').owlCarousel({
+                                smartSpeed: 1200,
+                                items: 1,
+                                loop: true,
+                                dots: true,
+                                nav: true,
+                                navText: false,
+                                margin: 10,
+                                autoHeight: true
+                            });
+                        });
+
+                        $('#runBtn').click(function () {
+                            renderChart()
+                        })
+                    });
+
+                    function renderChart() {
+                        $('#runBtn').attr('disabled', 'disabled');
+                        if (myChart) myChart.destroy()
+                        myChart = new Chart(document.getElementById('myChart'), {
+                            type: 'line'
+                        });
+
+                        // Show loader for chart area
+                        $('#lineChart').removeClass('d-none')
+                        $('.preloader-spinner').removeClass('d-none')
+                        $('#prediction').addClass('d-none')
+                        let csvFile = $("#csvFilesFilter option:selected").text();
+
+                        $.post("{% url 'neural_network' %}", { csv: csvFile }, function (response) {
+                            $('#runBtn').removeAttr('disabled');
+                            // Hide the loader into Chart area
+                            $('.preloader-spinner').addClass('d-none')
+                            $('#prediction').removeClass('d-none')
+                            $('#prediction span').text(response.prediction)
+                            $('#myChart').removeClass('d-none')
+                            //Create the labels axis
+                            let labels = []
+                            response.history.loss.forEach((value) => {
+                                if (!labels.includes(value.toFixed(2))) labels.push(value.toFixed(2))
+                            })
+                            console.log('Labels: ', labels)
+                            myChart.data.labels = labels
+                            myChart.data.datasets = [{
+                                label: 'Loss',
+                                backgroundColor: 'rgb(252, 11, 3)',
+                                borderColor: 'rgb(252, 11, 3)',
+                                borderWidth: 1,
+                                fill: false,
+                                pointBorderWidth: 0,
+                                data: response.history.loss,
+                            },
+                            {
+                                label: 'MAE',
+                                backgroundColor: 'rgb(2, 15, 250)',
+                                borderColor: 'rgb(2, 15, 250)',
+                                borderWidth: 1,
+                                fill: false,
+                                pointBorderWidth: 0,
+                                data: response.history.mae,
+                            }]
+
+                            myChart.update()
+                        })
+
+                    }
+                </script>
+            </div>
+
+            <div class="col-sm-4 col-md-4 portfolio-block">
+                <!-- Project Description -->
+                <div class="project-description">
+                    <div class="block-title">
+                        <h3>Description</h3>
+                    </div>
+                    <ul class="project-general-info">
+                        <li>
+                            <p><i class="fa fa-user"></i> Saif Alhail</p>
+                        </li>
+                        <!-- <li>
+                            <p><i class="fa fa-globe"></i> <a href="#" target="_blank">www.project-site.com</a></p>
+                        </li> -->
+                        <li>
+                            <p><i class="fa fa-calendar"></i>2022</p>
+                        </li>
+                    </ul>
+
+                    <p class="text-justify">Feed Forward Neural Network used with alot of data to produce a strong model
+                        that can be used to predict prices. 
+                        <br>
+                        All Projects created here are done only by Saif Alhail.<br> 
+                        All rights are reserved; Saif Alhail
+                    </p>
+                    <!-- /Project Description -->
+
+                    <!-- Technology -->
+                    <div class="tags-block">
+                        <div class="block-title">
+                          <h3>AI Algorithms</h3>
+                        </div>
+                        <ul class="tags">
+                          <li><a>Python</a></li>
+                          <li><a>FF Neural Network</a></li>
+                          <li><a>Sklearn</a></li>
+                          <li><a>Pandas</a></li>
+                          <li><a>Keras</a></li>
+                          <li><a>Numpy</a></li>
+                        </ul>
+                      </div>
+                    <!-- /Technology -->
+
+                    <!-- Share Buttons -->
+                    <div class="btn-group share-buttons">
+                        <div class="block-title">
+                          <h3>Share</h3>
+                        </div>
+                        <a
+                          href="https://www.linkedin.com/in/saifalhail/"
+                          target="_blank"
+                          class="btn"
+                          ><i class="fab fa-linkedin"></i>
+                        </a>
+                        <!-- <a href="#" target="_blank" class="btn"><i class="fab fa-twitter"></i> </a> -->
+                        <!-- <a href="#" target="_blank" class="btn"><i class="fab fa-dribbble"></i> </a> -->
+                      </div>
+                    <!-- /Share Buttons -->
+                </div>
+                <!-- Project Description -->
+            </div>
+        </div>
+    </div>
+</div>
