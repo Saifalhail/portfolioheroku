@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-zedp2($!5*3!9wvkkbbr@zpcwuqvg#!o0$7&raxinx2q&yj(zv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['portfoliosaif.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -136,5 +136,3 @@ MEDIA_ROOT = Path.joinpath(BASE_DIR, 'media')
 
 MEDIA_URL = 'media/'
 
-import django_on_heroku
-django_on_heroku.settings(locals())
