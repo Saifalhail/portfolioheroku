@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-zedp2($!5*3!9wvkkbbr@zpcwuqvg#!o0$7&raxinx2q&yj(zv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['www.salhail.com']
+ALLOWED_HOSTS = ['www.salhail.com', '127.0.0.1']
 
 
 # Application definition
