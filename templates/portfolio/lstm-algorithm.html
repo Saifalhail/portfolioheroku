@@ -3,17 +3,11 @@
   <div class="ajax-page-wrapper">
     <div class="ajax-page-nav">
       <div class="nav-item ajax-page-prev-next">
-        <a class="ajax-page-load" href="{% url 'neural_network' %}"
-          ><i class="lnr lnr-chevron-left"></i
-        ></a>
-        <a class="ajax-page-load" href="{% url 'data_manipulation' %}"
-          ><i class="lnr lnr-chevron-right"></i
-        ></a>
+        <a class="ajax-page-load" href="{% url 'neural_network' %}"><i class="lnr lnr-chevron-left"></i></a>
+        <a class="ajax-page-load" href="{% url 'data_manipulation' %}"><i class="lnr lnr-chevron-right"></i></a>
       </div>
       <div class="nav-item ajax-page-close-button">
-        <a id="ajax-page-close-button" href="#"
-          ><i class="lnr lnr-cross"></i
-        ></a>
+        <a id="ajax-page-close-button" href="#"><i class="lnr lnr-cross"></i></a>
       </div>
     </div>
 
@@ -114,13 +108,9 @@
             });
           });
 
+
           function renderChart() {
             $("#runBtn").attr("disabled", "disabled");
-            if (myChart) myChart.destroy();
-            myChart = new Chart(document.getElementById("myChart"), {
-              type: "line",
-            });
-            // Show loader for chart area
             $(".preloader-spinner").removeClass("d-none");
             let csvFile = $("#csvFilesFilter option:selected").text();
 
@@ -142,31 +132,41 @@
                     labels.push(value.toFixed(2));
                 });
                 console.log("Labels: ", labels);
-                myChart.data.labels = labels;
-                myChart.data.datasets = [
-                  {
-                    label: "True Price",
-                    backgroundColor: "rgb(252, 11, 3)",
-                    borderColor: "rgb(252, 11, 3)",
-                    borderWidth: 1,
-                    fill: false,
-                    pointBorderWidth: 0,
-                    data: response.true_price,
-                  },
-                  {
-                    label: "Prediction",
-                    backgroundColor: "rgb(2, 15, 250)",
-                    borderColor: "rgb(2, 15, 250)",
-                    borderWidth: 1,
-                    fill: false,
-                    data: response.prediction,
-                  },
-                ];
+                if (!myChart) {
+                  myChart = new Chart(document.getElementById("myChart"), {
+                    type: "line",
+                    data: {
+                      labels: labels,
+                      datasets: [{
+                        label: "True Price",
+                        data: response.true_price,
+                        backgroundColor: "rgb(252, 11, 3)",
+                        borderColor: "rgb(252, 11, 3)",
+                        borderWidth: 1,
+                        fill: false,
+                        pointBorderWidth: 0
+                      }, {
+                        label: "Prediction",
+                        data: response.prediction,
+                        backgroundColor: "rgb(2, 15, 250)",
+                        borderColor: "rgb(2, 15, 250)",
+                        borderWidth: 1,
+                        fill: false
+                      }]
+                    },
 
-                myChart.update();
+                  });
+                } else {
+                  myChart.data.labels = labels;
+                  myChart.data.datasets[0].data = response.true_price;
+                  myChart.data.datasets[1].data = response.prediction;
+                  myChart.update();
+                }
               }
             );
           }
+
+
         </script>
       </div>
 
@@ -192,7 +192,7 @@
             Long Short Term Memory (LSTM) Algorithm uses previous input, stores
             in the data and tries to predict the subsequent output for the data.
             <br>
-            All Projects created here are done only by Saif Alhail.<br> 
+            All Projects created here are done only by Saif Alhail.<br>
             All rights are reserved; Saif Alhail
           </p>
           <!-- /Project Description -->
@@ -217,11 +217,8 @@
             <div class="block-title">
               <h3>Share</h3>
             </div>
-            <a
-              href="https://www.linkedin.com/in/saifalhail/"
-              target="_blank"
-              class="btn"
-              ><i class="fab fa-linkedin"></i>
+            <a href="https://www.linkedin.com/in/saifalhail/" target="_blank" class="btn"><i
+                class="fab fa-linkedin"></i>
             </a>
             <!-- <a href="#" target="_blank" class="btn"><i class="fab fa-twitter"></i> </a> -->
             <!-- <a href="#" target="_blank" class="btn"><i class="fab fa-dribbble"></i> </a> -->
